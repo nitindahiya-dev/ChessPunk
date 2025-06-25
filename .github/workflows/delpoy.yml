@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [18.x]
+        node-version: ["18.x"]
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -30,7 +30,6 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
-    # choose environment based on branch
     environment: ${{ github.ref == 'refs/heads/main' && 'production' || 'development' }}
     steps:
       - name: Checkout code
@@ -42,8 +41,6 @@ jobs:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          # on `main`, this flag does a production deploy; on `dev` it’s a preview
-          vercel-args: ${{ github.ref == 'refs/heads/main' && '--prod' || '' }}
-          # your Vercel team namespace:
+          vercel-args: "${{ github.ref == 'refs/heads/main' && '--prod' || '' }}"
           scope: nitindahiya199s-projects
           working-directory: .

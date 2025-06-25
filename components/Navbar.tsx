@@ -6,8 +6,8 @@ export const Navbar: React.FC = () => (
             <Link href="/" className="text-2xl font-bold">ChessPunk</Link>
             <div className="space-x-4">
                 <Link href="/" className="hover:text-gray-300">Home</Link>
-                <Link href="/about" className="hover:text-gray-300">About</Link>
-                <Link href="/profile" className="hover:text-gray-300">Profile</Link>
+                <Link href="/" className="hover:text-gray-300">About</Link>
+                <Link href="/" className="hover:text-gray-300">Profile</Link>
             </div>
         </div>
     </nav>

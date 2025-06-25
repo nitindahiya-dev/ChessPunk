@@ -8,6 +8,7 @@ const Home: NextPage = () => {
       <p className="mb-6 text-lg">
         Discover the ultimate Web3 chess experience—play, compete, and earn rewards!
       </p>
+      <h2 className='mb-10 text-6xl h-96 pt-24 font-bold'>Under Contruction</h2>
       <Button onClick={() => alert('Start Playing!')}>Get Started</Button>
     </div>
   );

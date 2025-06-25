@@ -1,34 +1,36 @@
 import type { NextConfig } from 'next';
-import type { Configuration as WebpackConfig, StatsOptions, InfrastructureLogging } from 'webpack';
+import type { Configuration as WebpackConfig, StatsOptions } from 'webpack';
 
-// next.config.js
 /** @type {import('next').NextConfig} */
-interface CustomWebpackOptions {
-  dev: boolean;
+interface CustomWebpackConfig extends WebpackConfig {
+  infrastructureLogging?: object;
+  stats?: StatsOptions | { warnings: boolean };
 }
 
-interface CustomWebpackConfig extends WebpackConfig {
-  cache?: boolean;
-  infrastructureLogging?: InfrastructureLogging;
-  stats?: StatsOptions & { warnings?: boolean };
+interface WebpackOptions {
+  dev: boolean;
+  isServer: boolean;
+  webpack: typeof import('webpack');
+  buildId: string;
+  config: NextConfig;
+  defaultLoaders: unknown;
+  dir: string;
+  totalPages: number | undefined;
+  nextRuntime?: string;
+  webpackVersion?: string;
 }
 
 const nextConfig: NextConfig = {
-  webpack: (config: CustomWebpackConfig, options: CustomWebpackOptions): CustomWebpackConfig => {
-    if (options.dev) {
-      // 1) Disable caching (stops cache‑dependency logs):
+  webpack: (config: CustomWebpackConfig, { dev }: WebpackOptions) => {
+    if (dev) {
+      // 1) Disable persistent cache (no CssDependency warnings)
       config.cache = false;
 
-      // 2) Silence infrastructure‑level logs (warnings → errors only):
-      //    (requires Next.js 12.1+ / Webpack 5)
-      config.infrastructureLogging = {
-        level: 'error',    // only show error‐level messages
-      };
+      // 2) Only show error‑level infra logs (hide warnings)
+      config.infrastructureLogging = { level: 'error' };
 
-      // 3) Optionally hide warnings in stats:
-      config.stats = {
-        warnings: false,
-      };
+      // 3) Don’t print warnings in stats
+      config.stats = { warnings: false };
     }
     return config;
   },

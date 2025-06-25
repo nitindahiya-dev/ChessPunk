@@ -1,0 +1,49 @@
+name: CI & Deploy
+
+on:
+  push:
+    branches:
+      - dev
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build project
+        run: npm run build
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    # choose environment based on branch
+    environment: ${{ github.ref == 'refs/heads/main' && 'production' || 'development' }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v20
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          # on `main`, this flag does a production deploy; on `dev` it’s a preview
+          vercel-args: ${{ github.ref == 'refs/heads/main' && '--prod' || '' }}
+          # your Vercel team namespace:
+          scope: nitindahiya199s-projects
+          working-directory: .

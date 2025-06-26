@@ -32,13 +32,16 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Install Vercel CLI
-        run: npm install -g vercel
+        run: npm install -g vercel@44.2.2 # Pin to your current version for consistency
+
+      - name: Pull Vercel project settings
+        run: vercel pull --yes --token ${{ secrets.VERCEL_TOKEN }} --project ${{ secrets.VERCEL_PROJECT_ID }} --scope ${{ secrets.VERCEL_ORG_ID }}
 
       - name: Deploy to Vercel
         run: |
           if [ "${{ github.ref }}" = "refs/heads/main" ]; then
-            vercel --token ${{ secrets.VERCEL_TOKEN }} --prod --scope ${{ secrets.VERCEL_ORG_ID }} --project ${{ secrets.VERCEL_PROJECT_ID }}
+            vercel deploy --token ${{ secrets.VERCEL_TOKEN }} --prod
           else
-            vercel --token ${{ secrets.VERCEL_TOKEN }} --scope ${{ secrets.VERCEL_ORG_ID }} --project ${{ secrets.VERCEL_PROJECT_ID }}
+            vercel deploy --token ${{ secrets.VERCEL_TOKEN }}
           fi
         working-directory: .

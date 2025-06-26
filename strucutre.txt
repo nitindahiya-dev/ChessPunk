@@ -30,3 +30,11 @@ ChessPunk/
 ├── constants/                   # Constant values (e.g., chain IDs, network URLs)
 │   └── config.ts
 └── README.md                    # Project description and instructions
+
+
+smooth animation + Tailwind CSS + react-chessboard
+Mobile-friendly out of the box.
+
+Easy to plug in your real-time Socket.io logic.
+
+Works well with Web3 features like wallet integration and NFTs.

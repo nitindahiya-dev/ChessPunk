@@ -1,17 +1,33 @@
+// components/Button.tsx
 import React from 'react';
 
 interface ButtonProps {
+  onClick: () => void;
   children: React.ReactNode;
-  onClick?: () => void;
-  disabled?: boolean;
+  variant?: 'primary' | 'secondary' | 'glow';
+  className?: string;
 }
 
-export const Button: React.FC<ButtonProps> = ({ children, onClick, disabled }) => (
-  <button
-    onClick={onClick}
-    disabled={disabled}
-    className={`px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 disabled:opacity-50`}
-  >
-    {children}
-  </button>
-);
+export const Button: React.FC<ButtonProps> = ({ 
+  onClick, 
+  children, 
+  variant = 'primary',
+  className = ''
+}) => {
+  const baseClasses = "font-bold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105";
+  
+  const variantClasses = {
+    primary: "bg-cyan-500 hover:bg-cyan-400 text-gray-900",
+    secondary: "bg-transparent border-2 border-cyan-500 hover:bg-cyan-500/20 text-cyan-500",
+    glow: "bg-cyan-500 text-gray-900 shadow-lg shadow-cyan-500/50 hover:shadow-cyan-500/70"
+  };
+
+  return (
+    <button
+      onClick={onClick}
+      className={`${baseClasses} ${variantClasses[variant]} ${className}`}
+    >
+      {children}
+    </button>
+  );
+};

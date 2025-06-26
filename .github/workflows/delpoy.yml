@@ -10,38 +10,33 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Use Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18.x'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build project
-        run: npm run build
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with: { node-version: "18.x" }
+      - run: npm ci
+      - run: npm run build
 
   deploy:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
       - name: Install Vercel CLI
-        run: npm install -g vercel@44.2.2 # Pin to your current version for consistency
-
-      - name: Pull Vercel project settings
-        run: vercel pull --yes --token ${{ secrets.VERCEL_TOKEN }} --project ${{ secrets.VERCEL_PROJECT_ID }} --scope ${{ secrets.VERCEL_ORG_ID }}
+        run: npm install -g vercel@44.2.2
 
       - name: Deploy to Vercel
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         run: |
-          if [ "${{ github.ref }}" = "refs/heads/main" ]; then
-            vercel deploy --token ${{ secrets.VERCEL_TOKEN }} --prod
+          BRANCH=${GITHUB_REF##*/}
+          echo "Deploying branch: $BRANCH"
+          if [ "$BRANCH" = "main" ]; then
+            vercel deploy --prod --confirm \
+              --token $VERCEL_TOKEN \
+              --scope nitindahiya199s-projects
           else
-            vercel deploy --token ${{ secrets.VERCEL_TOKEN }}
+            vercel deploy --confirm \
+              --token $VERCEL_TOKEN \
+              --scope nitindahiya199s-projects
           fi
-        working-directory: .

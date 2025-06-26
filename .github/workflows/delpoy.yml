@@ -1,0 +1,42 @@
+name: CI & Deploy
+
+on:
+  push:
+    branches:
+      - dev
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with: { node-version: "18.x" }
+      - run: npm ci
+      - run: npm run build
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel@44.2.2
+
+      - name: Deploy to Vercel
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          BRANCH=${GITHUB_REF##*/}
+          echo "Deploying branch: $BRANCH"
+          if [ "$BRANCH" = "main" ]; then
+            vercel deploy --prod --confirm \
+              --token $VERCEL_TOKEN \
+              --scope nitindahiya199s-projects
+          else
+            vercel deploy --confirm \
+              --token $VERCEL_TOKEN \
+              --scope nitindahiya199s-projects
+          fi

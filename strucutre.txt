@@ -1,5 +1,6 @@
 ChessPunk/
 ├── .git/                         # Git repo config (auto-created by `git init`)
+├── .github/deploy.yml
 ├── .gitignore                    # Ignores node_modules, .env*, etc.
 ├── .env.local                    # Local environment variables (never commit this)
 ├── next.config.js                # Next.js config (modify if needed)
@@ -25,8 +26,12 @@ ChessPunk/
 │   └── WalletContext.tsx
 ├── lib/                         # Helper functions (API, utils, etc.)
 │   └── solana.ts
-├── types/                       # Custom TypeScript types
-│   └── index.d.ts
-├── constants/                   # Constant values (e.g., chain IDs, network URLs)
-│   └── config.ts
 └── README.md                    # Project description and instructions
+
+
+smooth animation + Tailwind CSS + react-chessboard
+Mobile-friendly out of the box.
+
+Easy to plug in your real-time Socket.io logic.
+
+Works well with Web3 features like wallet integration and NFTs.

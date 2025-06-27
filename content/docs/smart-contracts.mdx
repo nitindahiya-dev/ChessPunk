@@ -1,0 +1,34 @@
+# Smart Contracts
+
+Overview of the on-chain logic powering ChessPunk matches and rewards.
+
+<Callout type="info">
+  Info: All contracts are written in Rust with Anchor on Solana.
+</Callout>
+
+## Core Contracts
+
+1. **MatchContract**  
+   - Stake handling (entry fees, payouts)  
+   - Winner resolution via signed result  
+
+2. **NFTRewardContract**  
+   - Mints badge NFTs when events trigger  
+
+3. **TokenContract**  
+   - SPL token for platform rewards and staking  
+
+## Security Measures
+
+- **On-chain Timeouts**: Auto-resolve if a player is AFK  
+- **Dispute Logic**: A third-party oracle can adjudicate contested matches  
+- **Upgradability**: Managed via Anchor upgrades with multisig
+
+## Deployment
+
+- Deployed to **Devnet** for testing, then **Mainnet Beta**  
+- Verified on Solana Explorer with public address links  
+
+<Callout type="tip">
+  Tip: Review the source code on GitHub and audit reports before depositing large stakes.
+</Callout>

@@ -1,15 +1,20 @@
-import type { NextPage } from 'next';
-import { Button } from '../components/Button';
+import { NextPage } from 'next';
+import BackgroundGrid from '../components/home/BackgroundGrid';
+import Hero from '../components/home/Hero';
+import ChessBoard from '../components/home/ChessBoard';
+import Features from '../components/home/Features';
+import PlayerSpotlight from '../components/home/PlayerSpotlight';
+import TournamentCountdown from '../components/home/TournamentCountdown';
 
 const Home: NextPage = () => {
   return (
-    <div className="text-center text-white">
-      <h1 className="text-4xl font-bold mb-4 ">Welcome to ChessPunk</h1>
-      <p className="mb-6 text-lg">
-        Discover the ultimate Web3 chess experience—play, compete, and earn rewards!
-      </p>
-      <h2 className='mb-10 text-6xl h-96 pt-24 font-bold'>Under Contruction</h2>
-      <Button onClick={() => alert('Start Playing!')}>Get Started</Button>
+    <div className="min-h-screen bg-gray-900 text-white">
+      <BackgroundGrid />
+      <Hero />
+      <ChessBoard />
+      <Features />
+      <PlayerSpotlight />
+      <TournamentCountdown />
     </div>
   );
 };

@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 // components/Footer.tsx
 export const Footer: React.FC = () => (
   <footer className="bg-gray-900/80 backdrop-blur-md border-t border-cyan-500/10 py-8 mt-16">
@@ -12,7 +14,7 @@ export const Footer: React.FC = () => (
             The ultimate Web3 chess experience. Play, compete, and earn crypto rewards.
           </p>
         </div>
-        
+
         <div>
           <h4 className="text-cyan-400 font-semibold mb-4">Features</h4>
           <ul className="space-y-2 text-gray-400">
@@ -22,17 +24,21 @@ export const Footer: React.FC = () => (
             <li className="hover:text-cyan-400 cursor-pointer">Crypto Rewards</li>
           </ul>
         </div>
-        
+
         <div>
           <h4 className="text-cyan-400 font-semibold mb-4">Resources</h4>
           <ul className="space-y-2 text-gray-400">
-            <li className="hover:text-cyan-400 cursor-pointer">Documentation</li>
+            <li className="hover:text-cyan-400 cursor-pointer">
+              <Link href={"/docs"}>
+                Documentation
+              </Link>
+            </li>
             <li className="hover:text-cyan-400 cursor-pointer">Smart Contracts</li>
             <li className="hover:text-cyan-400 cursor-pointer">API</li>
             <li className="hover:text-cyan-400 cursor-pointer">Tutorials</li>
           </ul>
         </div>
-        
+
         <div>
           <h4 className="text-cyan-400 font-semibold mb-4">Community</h4>
           <div className="flex space-x-4">
@@ -48,7 +54,7 @@ export const Footer: React.FC = () => (
           </div>
         </div>
       </div>
-      
+
       <div className="border-t border-cyan-500/10 mt-8 pt-6 text-center">
         <p className="text-sm text-gray-600">
           &copy; {new Date().getFullYear()} ChessPunk. All rights reserved.

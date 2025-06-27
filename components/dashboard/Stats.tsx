@@ -1,4 +1,4 @@
-import { userData } from './data';
+import { userData } from '../../data/data';
 
 const getRankBadge = (elo: number) => {
   if (elo >= 2400) return { title: "Grandmaster", color: "text-red-500", icon: "♕" };

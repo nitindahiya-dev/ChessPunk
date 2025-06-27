@@ -1,4 +1,4 @@
-import { matchHistory } from './data';
+import { matchHistory } from '../../data/data';
 
 const History = () => {
   return (

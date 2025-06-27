@@ -1,4 +1,4 @@
-import { userData } from './data';
+import { userData } from '../../data/data';
 
 const Analysis = () => {
   const isPremium = userData.premiumMember;

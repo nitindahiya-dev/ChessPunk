@@ -1,12 +1,12 @@
 import { NextPage } from 'next';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Profile from '../components/dashboard/Profile';
 import Stats from '../components/dashboard/Stats';
 import History from '../components/dashboard/History';
 import NFTs from '../components/dashboard/NFTs';
 import Analysis from '../components/dashboard/Analysis';
 import Settings from '../components/dashboard/Settings';
-import { userData } from '../components/dashboard/data';
+import { userData } from '../data/data';
 
 const Dashboard: NextPage = () => {
   const [activeTab, setActiveTab] = useState('profile');

@@ -1,45 +1,67 @@
-import { useState } from 'react';
-import Web3 from 'web3';
-import { userData } from './data';
-import { useWallet } from '../../context/WalletContext';
+import { useState } from 'react'
+import Web3 from 'web3'
+import { userData } from '../../data/data'
+import { useWallet } from '../../context/WalletContext'
 
-const Settings = () => {
-  const { connectedWallet, setConnectedWallet } = useWallet();
-  const [toast, setToast] = useState<string | null>(null);
+// Extend Window for Ethereum & Phantom
+declare global {
+  interface Window {
+    ethereum?: {
+      isMetaMask?: boolean
+      request: (args: { method: string }) => Promise<unknown>
+      on?: (event: 'accountsChanged', handler: (accounts: string[]) => void) => void
+    }
+    solana?: {
+      isPhantom?: boolean
+      publicKey: { toString(): string }
+      connect: () => Promise<{ publicKey: { toString(): string } }>
+      disconnect: () => Promise<void>
+      on?: (event: 'disconnect', handler: () => void) => void
+    }
+  }
+}
 
-  const connectWallet = async (walletType: string) => {
+const Settings: React.FC = () => {
+  const { connectedWallet, setConnectedWallet } = useWallet()
+  const [toast, setToast] = useState<string | null>(null)
+
+  const connectWallet = async (walletType: 'MetaMask' | 'Phantom') => {
     try {
       if (walletType === 'MetaMask' && window.ethereum?.isMetaMask) {
-        await window.ethereum.request({ method: 'eth_requestAccounts' });
-        const web3Instance = new Web3(window.ethereum);
-        const accounts = await web3Instance.eth.getAccounts();
-        setConnectedWallet({ type: 'ethereum', address: accounts[0] });
-        window.ethereum.on('accountsChanged', (accounts: string[]) => {
-          setConnectedWallet(accounts.length > 0 ? { type: 'ethereum', address: accounts[0] } : null);
-        });
-      } else if (walletType === 'Phantom' && (window as any).solana?.isPhantom) {
-        const solana = (window as any).solana;
-        await solana.connect();
-        const address = solana.publicKey.toString();
-        setConnectedWallet({ type: 'solana', address });
-        solana.on('disconnect', () => setConnectedWallet(null));
+        await window.ethereum.request({ method: 'eth_requestAccounts' })
+        const web3Instance = new Web3(window.ethereum)
+        const accounts = (await web3Instance.eth.getAccounts()) as string[]
+        if (accounts[0]) {
+          setConnectedWallet({ type: 'ethereum', address: accounts[0] })
+        }
+        window.ethereum.on?.('accountsChanged', (accounts: string[]) => {
+          setConnectedWallet(
+            accounts.length > 0
+              ? { type: 'ethereum', address: accounts[0] }
+              : null
+          )
+        })
+      } else if (walletType === 'Phantom' && window.solana?.isPhantom) {
+        const resp = await window.solana.connect()
+        const addr = resp.publicKey.toString()
+        setConnectedWallet({ type: 'solana', address: addr })
+        window.solana.on?.('disconnect', () => setConnectedWallet(null))
       } else {
-        throw new Error('Selected wallet not available');
+        throw new Error('Selected wallet not available')
       }
-    } catch (error) {
-      console.error('Wallet connection failed:', error);
-      setToast('Failed to connect wallet. Please try again.');
-      setTimeout(() => setToast(null), 3000);
+    } catch (err) {
+      console.error('Wallet connection failed:', err)
+      setToast('Failed to connect wallet. Please try again.')
+      setTimeout(() => setToast(null), 3000)
     }
-  };
+  }
 
   const disconnectWallet = () => {
     if (connectedWallet?.type === 'solana') {
-      (window as any).solana.disconnect();
+      window.solana?.disconnect()
     }
-    setConnectedWallet(null);
-  };
-
+    setConnectedWallet(null)
+  }
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
       <div className="lg:col-span-2 bg-gray-800/50 backdrop-blur-sm border border-cyan-500/20 rounded-xl p-6">
@@ -160,11 +182,10 @@ const Settings = () => {
                 </div>
               </div>
               <span
-                className={`px-2 py-1 rounded-full text-xs font-bold ${
-                  connectedWallet?.type === 'ethereum'
+                className={`px-2 py-1 rounded-full text-xs font-bold ${connectedWallet?.type === 'ethereum'
                     ? 'bg-green-500/20 text-green-400'
                     : 'bg-gray-600 text-gray-400'
-                }`}
+                  }`}
               >
                 {connectedWallet?.type === 'ethereum' ? 'CONNECTED' : 'DISCONNECTED'}
               </span>
@@ -175,11 +196,10 @@ const Settings = () => {
                   ? disconnectWallet()
                   : connectWallet('MetaMask')
               }
-              className={`w-full py-2 rounded-lg ${
-                connectedWallet?.type === 'ethereum'
+              className={`w-full py-2 rounded-lg ${connectedWallet?.type === 'ethereum'
                   ? 'bg-gray-800 hover:bg-red-500/20 text-red-400'
                   : 'bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400'
-              }`}
+                }`}
             >
               {connectedWallet?.type === 'ethereum' ? 'Disconnect Wallet' : 'Connect Wallet'}
             </button>
@@ -193,11 +213,10 @@ const Settings = () => {
                 </div>
               </div>
               <span
-                className={`px-2 py-1 rounded-full text-xs font-bold ${
-                  connectedWallet?.type === 'solana'
+                className={`px-2 py-1 rounded-full text-xs font-bold ${connectedWallet?.type === 'solana'
                     ? 'bg-green-500/20 text-green-400'
                     : 'bg-gray-600 text-gray-400'
-                }`}
+                  }`}
               >
                 {connectedWallet?.type === 'solana' ? 'CONNECTED' : 'DISCONNECTED'}
               </span>
@@ -208,11 +227,10 @@ const Settings = () => {
                   ? disconnectWallet()
                   : connectWallet('Phantom')
               }
-              className={`w-full py-2 rounded-lg ${
-                connectedWallet?.type === 'solana'
+              className={`w-full py-2 rounded-lg ${connectedWallet?.type === 'solana'
                   ? 'bg-gray-800 hover:bg-red-500/20 text-red-400'
                   : 'bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400'
-              }`}
+                }`}
             >
               {connectedWallet?.type === 'solana' ? 'Disconnect Wallet' : 'Connect Wallet'}
             </button>

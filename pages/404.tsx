@@ -40,7 +40,7 @@ const NotFound = () => {
           </h2>
           
           <p className="text-gray-400 text-lg mb-10 max-w-lg mx-auto">
-            The chessboard you're looking for has been captured or moved to another dimension. 
+            The chessboard {`you're`} looking for has been captured or moved to another dimension. 
             Check the coordinates and try again, or return to the main arena.
           </p>
           

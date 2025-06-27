@@ -1,0 +1,36 @@
+# Ranking System
+
+Understand how ChessPunk calculates and displays player rankings.
+
+<Callout type="info">
+  Info: We use a modified ELO algorithm that factors in stake size.
+</Callout>
+
+## ELO Basics
+
+- Start at **1200 rating**  
+- Win vs. higher rating: +K points  
+- Loss vs. lower rating: –K points  
+
+## Stake Multiplier
+
+- **Low Stakes (&lt;0.05 SOL&gt;)**: K = 20  
+- **Medium Stakes (0.05–0.2 SOL)**: K = 30  
+- **High Stakes (&gt;0.2 SOL&lt;)**: K = 40  
+ 
+
+## Leaderboard Tiers
+
+- **Bronze**: 1200–1399  
+- **Silver**: 1400–1599  
+- **Gold**: 1600–1799  
+- **Platinum**: 1800+  
+
+## Seasonal Resets
+
+- Every 3 months, top 10% keep half their bonus points  
+- Resets drive fresh competition and fair matchmaking  
+
+<Callout type="tip">
+  Tip: Focus on consistent wins in medium-stake rooms to climb fastest.
+</Callout>

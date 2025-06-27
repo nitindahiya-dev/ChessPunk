@@ -1,18 +1,17 @@
+// next.config.js
+const withMDX = require('@next/mdx')({
+  extension: /\.mdx?$/
+})
+
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-  webpack: (config, { dev }) => {
+module.exports = withMDX({
+  pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
+  webpack(config, { dev }) {
     if (dev) {
-      // 1) Disable persistent cache (no CssDependency warnings)
-      config.cache = false;
-
-      // 2) Only show error‑level infra logs (hide warnings)
-      config.infrastructureLogging = { level: 'error' };
-
-      // 3) Don’t print warnings in stats
-      config.stats = { warnings: false };
+      config.cache = false
+      config.infrastructureLogging = { level: 'error' }
+      config.stats = { warnings: false }
     }
-    return config;
+    return config
   },
-};
-
-module.exports = nextConfig;
+})

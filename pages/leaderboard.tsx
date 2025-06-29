@@ -1,16 +1,8 @@
 import React from 'react';
+import { players } from '../data/data';
 
 const Leaderboard = () => {
-  const players = [
-    { rank: 1, username: "CryptoKnight", elo: 2450, wins: 142, losses: 18, winRate: 89, isYou: false },
-    { rank: 2, username: "NeonQueen", elo: 2380, wins: 218, losses: 42, winRate: 84, isYou: false },
-    { rank: 3, username: "BlockchainBishop", elo: 2325, wins: 175, losses: 35, winRate: 83, isYou: false },
-    { rank: 4, username: "QuantumPawn", elo: 2280, wins: 192, losses: 48, winRate: 80, isYou: true },
-    { rank: 5, username: "DeFiRook", elo: 2245, wins: 165, losses: 45, winRate: 79, isYou: false },
-    { rank: 6, username: "DAO_Master", elo: 2205, wins: 130, losses: 40, winRate: 76, isYou: false },
-    { rank: 7, username: "NFT_Gambit", elo: 2180, wins: 205, losses: 65, winRate: 76, isYou: false },
-    { rank: 8, username: "SmartContract", elo: 2155, wins: 180, losses: 60, winRate: 75, isYou: false },
-  ];
+
 
   return (
     <div className="min-h-screen bg-gray-900 text-white p-6">

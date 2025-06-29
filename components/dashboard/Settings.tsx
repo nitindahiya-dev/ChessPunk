@@ -1,25 +1,8 @@
+// components/dashboard/Settings.tsx
 import { useState } from 'react'
 import Web3 from 'web3'
 import { userData } from '../../data/data'
 import { useWallet } from '../../context/WalletContext'
-
-// Extend Window for Ethereum & Phantom
-declare global {
-  interface Window {
-    ethereum?: {
-      isMetaMask?: boolean
-      request: (args: { method: string }) => Promise<unknown>
-      on?: (event: 'accountsChanged', handler: (accounts: string[]) => void) => void
-    }
-    solana?: {
-      isPhantom?: boolean
-      publicKey: { toString(): string }
-      connect: () => Promise<{ publicKey: { toString(): string } }>
-      disconnect: () => Promise<void>
-      on?: (event: 'disconnect', handler: () => void) => void
-    }
-  }
-}
 
 const Settings: React.FC = () => {
   const { connectedWallet, setConnectedWallet } = useWallet()
@@ -28,7 +11,7 @@ const Settings: React.FC = () => {
   const connectWallet = async (walletType: 'MetaMask' | 'Phantom') => {
     try {
       if (walletType === 'MetaMask' && window.ethereum?.isMetaMask) {
-        await window.ethereum.request({ method: 'eth_requestAccounts' })
+        await window.ethereum.request({ method: 'eth_requestAccounts', params: [] })
         const web3Instance = new Web3(window.ethereum)
         const accounts = (await web3Instance.eth.getAccounts()) as string[]
         if (accounts[0]) {

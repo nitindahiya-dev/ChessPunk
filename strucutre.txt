@@ -1,32 +1,101 @@
 ChessPunk/
-├── .git/                         # Git repo config (auto-created by `git init`)
-├── .github/deploy.yml
-├── .gitignore                    # Ignores node_modules, .env*, etc.
-├── .env.local                    # Local environment variables (never commit this)
-├── next.config.js                # Next.js config (modify if needed)
-├── package.json                  # Project dependencies and scripts
-├── postcss.config.js            # Tailwind + PostCSS config
-├── tailwind.config.js           # Tailwind config (custom themes, etc.)
-├── tsconfig.json | jsconfig.json # TS or JS config
-├── public/                       # Static assets (images, favicon, etc.)
+├── .git/                        # Git repo config (auto-created by `git init`)
+├── .github/
+│   └── deploy.yml               # GitHub Actions deployment workflow
+├── .gitignore                   # Ignores node_modules, .env*, etc.
+
+├── .env.local                   # Local environment variables (never commit this)
+├── .env.development             # Dev environment variables
+├── .env.production              # Production environment variables
+
+├── next.config.js               # Next.js config
+├── package.json                 # Project metadata, dependencies, and scripts
+├── postcss.config.js            # Tailwind + PostCSS setup
+├── tailwind.config.js           # Tailwind CSS configuration
+├── tsconfig.json                # TypeScript configuration
+
+├── README.md                    # Project overview and instructions
+
+├── public/                      # Static assets
 │   ├── favicon.ico
-│   └── images/
+│   ├── backgrounds/
+│   ├── pieces/
+│   ├── sounds/
+│   └── grid-pattern.svg
+
 ├── styles/
-│   └── globals.css              # Tailwind CSS imports (@tailwind base/components/utilities)
-├── pages/                        # Routes = File names (Next.js convention)
-│   ├── _app.tsx                 # Custom app component (includes global CSS)
-│   ├── index.tsx                # Home page
-│   └── api/                     # Serverless API routes
-│       └── hello.ts
-├── components/                  # Reusable UI components
-│   ├── Navbar.tsx
-│   ├── Footer.tsx
-│   └── Button.tsx
-├── context/                     # React Context Providers (e.g., Auth, Theme)
-│   └── WalletContext.tsx
-├── lib/                         # Helper functions (API, utils, etc.)
-│   └── solana.ts
-└── README.md                    # Project description and instructions
+│   └── globals.css              # Tailwind base/components/utilities
+
+├── content/                     # Static documentation content
+│   └── docs/                    # .mdx files for Docs UI
+
+├── hooks/
+│   └── useSounds.ts             # Custom React hook for sound playback
+
+├── context/
+│   └── WalletContext.tsx        # Wallet state/context provider
+
+├── lib/
+│   └── solana.ts                # Solana-specific helper functions
+
+├── types/
+│   └── wallet.ts                # Solana-specific helper functions
+
+├── components/                  # All reusable UI components
+│
+│   ├── ui/
+│   │   └── Callout.tsx          # Alert/callout box UI
+    │   ├── Navbar.tsx               # Top navigation bar
+    │   ├── Footer.tsx               # Footer
+    │   ├── Button.tsx               # Reusable button component
+    │   ├── Modal.tsx                # Reusable modal component
+│
+│   ├── dashboard/               # Dashboard views
+│   │   ├── Analysis.tsx
+│   │   ├── History.tsx
+│   │   ├── NFTs.tsx
+│   │   ├── Profile.tsx
+│   │   ├── Settings.tsx
+│   │   └── Stats.tsx
+│
+│   ├── docs/                    # Docs layout/navigation
+│   │   ├── DocsLayout.tsx
+│   │   ├── DocsRightNav.tsx
+│   │   └── DocsSidebar.tsx
+│
+│   ├── home/                    # Homepage components
+│   │   ├── BackgroundGrid.tsx
+│   │   ├── ChessBoard.tsx
+│   │   ├── Features.tsx
+│   │   ├── Hero.tsx
+│   │   ├── PlayerSpotlight.tsx
+│   │   └── TournamentCountdown.tsx
+│
+│   ├── PlayControls.tsx         # Game mode selector (Play Now)
+│   ├── WalletConnector.tsx      # Web3 wallet connect logic
+│   ├── ChatPanel.tsx            # In-game chat UI
+│   ├── GameControls.tsx         # Chess game control buttons
+│   ├── ChessBoard.tsx           # Main board logic
+│   ├── PlayerPanel.tsx          # Player avatars/info
+│   └── TrophyCase.tsx           # Rewards/Achievements showcase
+
+├── pages/                       # Next.js routes (1 file = 1 route)
+│   ├── _app.tsx                 # Custom App component (includes global providers & styles)
+│   ├── index.tsx                # Homepage
+│   ├── 404.tsx                  # Custom 404 error page
+│   ├── dashboard.tsx            # Dashboard route
+│   ├── leaderboard.tsx          # Leaderboard page
+│   ├── nfts.tsx                 # NFT showcase page
+│   ├── tournaments.tsx          # Tournament info/registration
+│
+│   ├── api/                     # API routes (serverless functions)
+│   │   └── hello.ts
+│
+│   ├── docs/
+│   │   └── [slug].tsx           # Dynamic docs page per .mdx
+│
+│   └── game/
+│       └── [roomId].tsx         # Dynamic multiplayer game room
 
 
 smooth animation + Tailwind CSS + react-chessboard
@@ -35,3 +104,18 @@ Mobile-friendly out of the box.
 Easy to plug in your real-time Socket.io logic.
 
 Works well with Web3 features like wallet integration and NFTs.
+
+White Pawn (wp.svg)
+White Knight (wn.svg)
+White Bishop (wb.svg)
+White Rook (wr.svg)
+White Queen (wq.svg)
+White King (wk.svg)
+
+Black Pawn (bp.svg)
+Black Knight (bn.svg)
+Black Bishop (bb.svg)
+Black Rook (br.svg)
+Black Queen (bq.svg)
+Black King (bk.svg)
+

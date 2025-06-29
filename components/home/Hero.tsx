@@ -1,14 +1,18 @@
+// components/home/Hero.tsx
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
-import { Button } from '../Button';
+import { Button } from '../ui/Button';
 
-const Hero = () => {
+interface HeroProps {
+  onPlayNowClick: () => void;
+}
+
+const Hero: React.FC<HeroProps> = ({ onPlayNowClick }) => {
   const heroRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (typeof window === 'undefined' || !heroRef.current) return;
 
-    // Hero animations
     gsap.fromTo(
       '.hero-title',
       { opacity: 0, y: 20 },
@@ -25,7 +29,6 @@ const Hero = () => {
       { opacity: 1, y: 0, duration: 1, delay: 0.6 }
     );
 
-    // Animated chess pieces
     const pieces = ['♔', '♕', '♖', '♗', '♘', '♙'];
     const container = heroRef.current;
 
@@ -71,7 +74,7 @@ const Hero = () => {
           <span className="text-purple-400">crypto rewards</span>
         </p>
         <div className="hero-button flex flex-col sm:flex-row gap-4 justify-center">
-          <Button onClick={() => alert('Start Playing!')} variant="glow" className="text-lg">
+          <Button onClick={onPlayNowClick} variant="glow" className="text-lg">
             Play Now
           </Button>
           <Button onClick={() => console.log('Explore Tournaments')} variant="secondary" className="text-lg">
@@ -81,7 +84,7 @@ const Hero = () => {
       </div>
 
       <div className="absolute bottom-0 left-0 right-0 bg-gray-800/50 backdrop-blur-sm border-t border-cyan-500/20 py-4">
-        <div className="container mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="container mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gapRestrictions:4">
           <div className="text-center">
             <div className="text-3xl font-bold text-cyan-400">24K+</div>
             <div className="text-gray-400 text-sm">Active Players</div>

@@ -4,27 +4,7 @@ import { Button } from './Button'
 import { useState, useEffect } from 'react'
 import Web3 from 'web3'
 
-// ---------- 1) Declare global provider interfaces -------------
-declare global {
-  interface Window {
-    // Minimal Ethereum provider (MetaMask)
-    ethereum?: {
-      isMetaMask?: boolean
-      request: (args: { method: string }) => Promise<unknown>
-      on?: (event: 'accountsChanged', handler: (accounts: string[]) => void) => void
-    }
-    // Minimal Phantom provider
-    solana?: {
-      isPhantom?: boolean
-      publicKey: { toString(): string }
-      connect: () => Promise<{ publicKey: { toString(): string } }>
-      disconnect: () => Promise<void>
-      on?: (event: 'disconnect', handler: () => void) => void
-    }
-  }
-}
-
-// ---------- 2) Wallet type & state -------------
+// ---------- 1) Wallet type & state -------------
 type ConnectedWallet =
   | { type: 'ethereum'; address: string }
   | { type: 'solana'; address: string }
@@ -36,7 +16,7 @@ export const Navbar: React.FC = () => {
   const [availableWallets, setAvailableWallets] = useState<Array<'MetaMask' | 'Phantom'>>([])
   const [toast, setToast] = useState<string | null>(null)
 
-  // ---------- 3) Detect installed wallets -------------
+  // ---------- 2) Detect installed wallets -------------
   useEffect(() => {
     const wallets: Array<'MetaMask' | 'Phantom'> = []
     if (window.ethereum?.isMetaMask) wallets.push('MetaMask')
@@ -44,7 +24,7 @@ export const Navbar: React.FC = () => {
     setAvailableWallets(wallets)
   }, [])
 
-  // ---------- 4) Connect logic -------------
+  // ---------- 3) Connect logic -------------
   const connectWallet = async (walletType: 'MetaMask' | 'Phantom') => {
     try {
       if (walletType === 'MetaMask' && window.ethereum) {
@@ -82,7 +62,7 @@ export const Navbar: React.FC = () => {
     }
   }
 
-  // ---------- 5) Disconnect logic -------------
+  // ---------- 4) Disconnect logic -------------
   const disconnectWallet = () => {
     if (connectedWallet?.type === 'solana') {
       window.solana?.disconnect()
@@ -90,7 +70,7 @@ export const Navbar: React.FC = () => {
     setConnectedWallet(null)
   }
 
-  // ---------- 6) UI handlers & formatting -------------
+  // ---------- 5) UI handlers & formatting -------------
   const handleConnectClick = () => {
     if (availableWallets.length === 0) {
       setToast('Please install MetaMask or Phantom Wallet')
@@ -110,7 +90,6 @@ export const Navbar: React.FC = () => {
         <Link href="/" className="text-2xl font-bold flex items-center">
           <span className="text-cyan-400">Chess</span>
           <span className="text-purple-500">Punk</span>
-          <div className="ml-2 h-2 w-2 bg-cyan-500 rounded-full animate-pulse" />
         </Link>
 
         <div className="flex space-x-4 items-center">

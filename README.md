@@ -1,4 +1,4 @@
-# [Under Contruction] Only static pages are added
+<!-- # [Under Contruction] Only static pages are added
 
 # ChessPunk
 
@@ -29,4 +29,5 @@ A Web3-powered chess platform built with Next.js, Tailwind CSS, MDX docs, and So
 1. **Clone the repo**  
    ```bash
    git clone https://github.com/your-org/chesspunk.git
-   cd chesspunk
+   cd chesspunk -->
+

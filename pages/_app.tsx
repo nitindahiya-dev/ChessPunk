@@ -2,8 +2,8 @@
 import { WalletProvider } from '../context/WalletContext';
 import '../styles/globals.css';
 import type { AppProps } from 'next/app';
-import { Navbar } from '../components/Navbar';
-import { Footer } from '../components/Footer';
+import { Navbar } from '../components/ui/Navbar';
+import { Footer } from '../components/ui/Footer';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (

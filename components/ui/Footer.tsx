@@ -6,10 +6,12 @@ export const Footer: React.FC = () => (
     <div className="container mx-auto px-4">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
         <div>
-          <h3 className="text-xl font-bold mb-4">
-            <span className="text-cyan-400">Chess</span>
-            <span className="text-purple-500">Punk</span>
-          </h3>
+          <Link href={"/"}>
+            <h3 className="text-xl font-bold mb-4">
+              <span className="text-cyan-400">Chess</span>
+              <span className="text-purple-500">Punk</span>
+            </h3>
+          </Link>
           <p className="text-gray-400 text-sm">
             The ultimate Web3 chess experience. Play, compete, and earn crypto rewards.
           </p>

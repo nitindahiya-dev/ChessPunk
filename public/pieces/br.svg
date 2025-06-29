@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 45 45">
+  <filter id="neon-glow">
+    <feGaussianBlur stdDeviation="3" result="glow"/>
+    <feComposite in="SourceGraphic" in2="glow" operator="over" result="composite"/>
+    <feBlend in="SourceGraphic" in2="composite" mode="screen"/>
+  </filter>
+  <path d="M9 39h27v-3H9v3zm3-3v-4h21v4H12zm3-22V9h4v2h5V9h4v2h5V9h4v5H12zm-3 4v13h21V16H12z" 
+        fill="#7B61FF" 
+        stroke="#7B61FF"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        filter="url(#neon-glow)">
+    <animate attributeName="opacity" values="1;0.7;1" dur="2s" repeatCount="indefinite"/>
+  </path>
+</svg>

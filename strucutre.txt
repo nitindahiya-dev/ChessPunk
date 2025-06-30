@@ -4,6 +4,8 @@ ChessPunk/
 │   └── deploy.yml               # GitHub Actions deployment workflow
 ├── .gitignore                   # Ignores node_modules, .env*, etc.
 
+
+├── .env
 ├── .env.local                   # Local environment variables (never commit this)
 ├── .env.development             # Dev environment variables
 ├── .env.production              # Production environment variables
@@ -78,6 +80,9 @@ ChessPunk/
 │   ├── ChessBoard.tsx           # Main board logic
 │   ├── PlayerPanel.tsx          # Player avatars/info
 │   └── TrophyCase.tsx           # Rewards/Achievements showcase
+
+├── lib/
+│   └── db.ts    
 
 ├── pages/                       # Next.js routes (1 file = 1 route)
 │   ├── _app.tsx                 # Custom App component (includes global providers & styles)

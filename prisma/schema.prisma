@@ -1,0 +1,56 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model leaderboard {
+  rank     Int     @id
+  username String
+  elo      Int
+  wins     Int
+  losses   Int
+  win_rate Int
+  is_you   Boolean @default(false)
+}
+
+model match_history {
+  id         Int                     @id @default(autoincrement())
+  user_id    Int?
+  opponent   String
+  result     String
+  duration   Unsupported("interval")
+  played_at  DateTime                @db.Date
+  elo_change Int
+  users      users?                  @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model nft_skins {
+  id       Int     @id @default(autoincrement())
+  user_id  Int?
+  name     String
+  type     String
+  rarity   String
+  equipped Boolean @default(false)
+  users    users?  @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model users {
+  id             Int             @id @default(autoincrement())
+  username       String
+  wallet_address String          @unique
+  elo_rating     Int             @default(1200)
+  matches_played Int             @default(0)
+  wins           Int             @default(0)
+  losses         Int             @default(0)
+  win_rate       Float           @default(0)
+  join_date      DateTime        @db.Date
+  last_active    DateTime        @default(now()) @db.Timestamp(6)
+  nfts_owned     Int             @default(0)
+  premium_member Boolean         @default(false)
+  match_history  match_history[]
+  nft_skins      nft_skins[]
+}

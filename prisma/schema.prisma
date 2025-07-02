@@ -1,3 +1,5 @@
+// prisma/schema.prisma
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -42,6 +44,13 @@ model users {
   id             Int             @id @default(autoincrement())
   username       String
   wallet_address String          @unique
+  bio            String?
+  theme          String          @default("CyberPunk")
+  board_style    String          @default("Neon Grid")
+  sound_effects  Boolean         @default(true)
+  move_sounds    Boolean         @default(true)
+  game_notifications Boolean     @default(true)
+  two_fa_enabled Boolean         @default(false)
   elo_rating     Int             @default(1200)
   matches_played Int             @default(0)
   wins           Int             @default(0)

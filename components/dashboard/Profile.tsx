@@ -1,17 +1,21 @@
+// components/dashboard/Profile.tsx
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
-import { userData } from '../../data/data';
+import { useUserData } from '../../hooks/useUserData';
+import { useWallet } from '../../context/WalletContext';
 
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-const Profile = () => {
+const Profile: React.FC = () => {
   const profileRef = useRef<HTMLDivElement>(null);
+  const { connectedWallet } = useWallet();
+  const { userData, loading, error } = useUserData(connectedWallet?.address);
 
   useEffect(() => {
-    if (profileRef.current) {
+    if (profileRef.current && userData) {
       gsap.fromTo(
         '.profile-card',
         { opacity: 0, y: 20 },
@@ -26,7 +30,12 @@ const Profile = () => {
     return () => {
       gsap.killTweensOf('.profile-card');
     };
-  }, []);
+  }, [userData]);
+
+  if (!connectedWallet) return <div>Please connect your wallet to view your profile.</div>;
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+  if (!userData) return <div>No user data found.</div>;
 
   return (
     <div ref={profileRef} className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -42,15 +51,15 @@ const Profile = () => {
               </div>
               <div>
                 <div className="text-gray-400 text-sm">Wallet Address</div>
-                <div className="font-mono text-sm text-purple-400 truncate">{userData.wallet}</div>
+                <div className="font-mono text-sm text-purple-400 truncate">{userData.wallet_address}</div>
               </div>
               <div>
                 <div className="text-gray-400 text-sm">Member Since</div>
-                <div className="font-medium">{userData.joinDate}</div>
+                <div className="font-medium">{new Date(userData.join_date).toLocaleDateString()}</div>
               </div>
               <div>
                 <div className="text-gray-400 text-sm">Last Active</div>
-                <div className="font-medium">{userData.lastActive}</div>
+                <div className="font-medium">{new Date(userData.last_active).toLocaleString()}</div>
               </div>
             </div>
           </div>
@@ -59,11 +68,11 @@ const Profile = () => {
             <div className="mb-4">
               <div className="flex items-center justify-between mb-2">
                 <div className="text-gray-400">Account Type</div>
-                <div className={`font-bold ${userData.premiumMember ? 'text-cyan-400' : 'text-gray-400'}`}>
-                  {userData.premiumMember ? 'Premium Member' : 'Free Account'}
+                <div className={`font-bold ${userData.premium_member ? 'text-cyan-400' : 'text-gray-400'}`}>
+                  {userData.premium_member ? 'Premium Member' : 'Free Account'}
                 </div>
               </div>
-              {!userData.premiumMember && (
+              {!userData.premium_member && (
                 <div className="bg-gradient-to-r from-cyan-500/20 to-purple-600/20 p-4 rounded-lg mt-4">
                   <h4 className="font-bold mb-2">Upgrade to Premium</h4>
                   <p className="text-sm mb-3">Unlock advanced features and exclusive content</p>
@@ -138,7 +147,7 @@ const Profile = () => {
               </div>
             </div>
             <div className="text-gray-500">Locked</div>
-          </div>
+          </div> 
         </div>
       </div>
     </div>

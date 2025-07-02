@@ -3,16 +3,12 @@ import Link from 'next/link'
 import { Button } from './Button'
 import { useState, useEffect } from 'react'
 import Web3 from 'web3'
+import { useWallet } from '../../context/WalletContext';
 
-// ---------- 1) Wallet type & state -------------
-type ConnectedWallet =
-  | { type: 'ethereum'; address: string }
-  | { type: 'solana'; address: string }
-  | null
 
 export const Navbar: React.FC = () => {
-  const [connectedWallet, setConnectedWallet] = useState<ConnectedWallet>(null)
   const [showWalletModal, setShowWalletModal] = useState(false)
+  const { connectedWallet, setConnectedWallet } = useWallet();
   const [availableWallets, setAvailableWallets] = useState<Array<'MetaMask' | 'Phantom'>>([])
   const [toast, setToast] = useState<string | null>(null)
 
@@ -28,47 +24,41 @@ export const Navbar: React.FC = () => {
   const connectWallet = async (walletType: 'MetaMask' | 'Phantom') => {
     try {
       if (walletType === 'MetaMask' && window.ethereum) {
-        // Request accounts
-        await window.ethereum.request({ method: 'eth_requestAccounts' })
-        const web3Instance = new Web3(window.ethereum)
-        const accounts = (await web3Instance.eth.getAccounts()) as string[]
+        await window.ethereum.request({ method: 'eth_requestAccounts' });
+        const web3Instance = new Web3(window.ethereum);
+        const accounts = (await web3Instance.eth.getAccounts()) as string[];
         if (accounts[0]) {
-          setConnectedWallet({ type: 'ethereum', address: accounts[0] })
+          setConnectedWallet({ type: 'ethereum', address: accounts[0] });
         }
-        // Listen for changes
         window.ethereum.on?.('accountsChanged', (accounts: string[]) => {
           if (accounts[0]) {
-            setConnectedWallet({ type: 'ethereum', address: accounts[0] })
+            setConnectedWallet({ type: 'ethereum', address: accounts[0] });
           } else {
-            setConnectedWallet(null)
+            setConnectedWallet(null);
           }
-        })
-
+        });
       } else if (walletType === 'Phantom' && window.solana?.isPhantom) {
-        const resp = await window.solana.connect()
-        const addr = resp.publicKey.toString()
-        setConnectedWallet({ type: 'solana', address: addr })
-        window.solana.on?.('disconnect', () => setConnectedWallet(null))
-
+        const resp = await window.solana.connect();
+        const addr = resp.publicKey.toString();
+        setConnectedWallet({ type: 'solana', address: addr });
+        window.solana.on?.('disconnect', () => setConnectedWallet(null));
       } else {
-        throw new Error('Selected wallet not available')
+        throw new Error('Selected wallet not available');
       }
-
-      setShowWalletModal(false)
+      setShowWalletModal(false);
     } catch (err) {
-      console.error('Wallet connection failed:', err)
-      setToast('Failed to connect wallet. Please try again.')
-      setTimeout(() => setToast(null), 3000)
+      console.error('Wallet connection failed:', err);
+      setToast('Failed to connect wallet. Please try again.');
+      setTimeout(() => setToast(null), 3000);
     }
-  }
-
+  };
   // ---------- 4) Disconnect logic -------------
   const disconnectWallet = () => {
     if (connectedWallet?.type === 'solana') {
-      window.solana?.disconnect()
+      window.solana?.disconnect();
     }
-    setConnectedWallet(null)
-  }
+    setConnectedWallet(null);
+  };
 
   // ---------- 5) UI handlers & formatting -------------
   const handleConnectClick = () => {
@@ -135,7 +125,7 @@ export const Navbar: React.FC = () => {
       </div>
 
       {showWalletModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="fixed top-[45vh] inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-gray-800 p-6 rounded-lg border border-cyan-500/30 max-w-sm w-full">
             <h3 className="text-lg font-bold text-cyan-400 mb-4">Select Wallet</h3>
             {availableWallets.length > 0 ? (

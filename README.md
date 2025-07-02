@@ -28,6 +28,6 @@ A Web3-powered chess platform built with Next.js, Tailwind CSS, MDX docs, and So
 
 1. **Clone the repo**  
    ```bash
-   git clone https://github.com/your-org/chesspunk.git
+   git clone https://github.com/nitindahiya-dev/ChessPunk.git
    cd chesspunk 
 

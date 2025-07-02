@@ -1,6 +1,5 @@
-const withMDX = require('@next/mdx')({
-  extension: /\.mdx?$/
-})
+// next.config.js
+const withMDX = require('@next/mdx')({ extension: /\.mdx?$/ })
 
 /** @type {import('next').NextConfig} */
 module.exports = withMDX({
@@ -11,13 +10,15 @@ module.exports = withMDX({
       config.infrastructureLogging = { level: 'error' }
       config.stats = { warnings: false }
     }
-    // Suppress specific @next/mdx warnings about dynamic imports
+
+    // Suppress that specific MDX loader parsing warning
     config.ignoreWarnings = [
       {
-        module: /node_modules\/@next\/mdx\/mdx-js-loader\.js/,
-        message: /Parsing of .* for build dependencies failed at 'import\(require\.resolve\(plugin\[0\], { paths: \[projectRoot\] }\)\)'/,
+        module: /@next\/mdx\/mdx-js-loader\.js/,
+        message: /Parsing of .*mdx-js-loader\.js.*failed at 'import\(require\.resolve/,
       },
     ]
+
     return config
   },
 })

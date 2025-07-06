@@ -33,24 +33,30 @@ ChessPunk/
 
 ├── hooks/
 │   └── useSounds.ts             # Custom React hook for sound playback
+│   └── useUserData.ts           
 
 ├── context/
 │   └── WalletContext.tsx        # Wallet state/context provider
 
 ├── lib/
 │   └── solana.ts                # Solana-specific helper functions
+│   └── chessAI.ts               # Adjusting difficulty via search depth
+
+├── prisma/
+│   └── prisma.ts                
+│   └── schema.prisma                
 
 ├── types/
-│   └── wallet.ts                # Solana-specific helper functions
+│   └── global.d.ts 
 
 ├── components/                  # All reusable UI components
 │
 │   ├── ui/
 │   │   └── Callout.tsx          # Alert/callout box UI
-    │   ├── Navbar.tsx               # Top navigation bar
-    │   ├── Footer.tsx               # Footer
-    │   ├── Button.tsx               # Reusable button component
-    │   ├── Modal.tsx                # Reusable modal component
+│   │   ├── Navbar.tsx               # Top navigation bar
+│   │   ├── Footer.tsx               # Footer
+│   │   ├── Button.tsx               # Reusable button component
+│   │   ├── Modal.tsx                # Reusable modal component
 │
 │   ├── dashboard/               # Dashboard views
 │   │   ├── Analysis.tsx
@@ -67,7 +73,7 @@ ChessPunk/
 │
 │   ├── home/                    # Homepage components
 │   │   ├── BackgroundGrid.tsx
-│   │   ├── ChessBoard.tsx
+│   │   ├── HomeChessBoard.tsx
 │   │   ├── Features.tsx
 │   │   ├── Hero.tsx
 │   │   ├── PlayerSpotlight.tsx
@@ -81,9 +87,6 @@ ChessPunk/
 │   ├── PlayerPanel.tsx          # Player avatars/info
 │   └── TrophyCase.tsx           # Rewards/Achievements showcase
 
-├── lib/
-│   └── db.ts    
-
 ├── pages/                       # Next.js routes (1 file = 1 route)
 │   ├── _app.tsx                 # Custom App component (includes global providers & styles)
 │   ├── index.tsx                # Homepage
@@ -94,7 +97,9 @@ ChessPunk/
 │   ├── tournaments.tsx          # Tournament info/registration
 │
 │   ├── api/                     # API routes (serverless functions)
-│   │   └── hello.ts
+│       ├── users/
+    │   │   └── [walletAddress].ts
+    │   │   └── update.ts
 │
 │   ├── docs/
 │   │   └── [slug].tsx           # Dynamic docs page per .mdx

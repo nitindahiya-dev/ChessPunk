@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint"
   },
-    "prisma": {
+  "prisma": {
     "seed": "node prisma/seed.js"
   },
   "dependencies": {
@@ -17,7 +17,7 @@
     "@next/mdx": "^15.3.4",
     "@prisma/client": "^6.10.1",
     "chess.js": "^1.4.0",
-    "framer-motion": "^12.19.2",
+    "framer-motion": "^12.23.0",
     "gsap": "^3.13.0",
     "next": "15.3.4",
     "pg": "^8.16.3",
@@ -26,9 +26,9 @@
     "react": "^19.0.0",
     "react-chessboard": "^4.7.3",
     "react-dom": "^19.0.0",
+    "react-toastify": "^11.0.5",
     "socket.io-client": "^4.8.1",
     "uuid": "^11.1.0",
-    
     "web3": "^4.16.0"
   },
   "devDependencies": {
@@ -40,6 +40,7 @@
     "@types/pg": "^8.15.4",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/react-toastify": "^4.0.2",
     "@types/socket.io-client": "^3.0.0",
     "@types/uuid": "^10.0.0",
     "@types/webpack": "^5.28.5",

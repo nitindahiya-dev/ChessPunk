@@ -1,3 +1,5 @@
+//hooks/useUserData.ts
+
 import { useState, useEffect } from 'react';
 
 export const useUserData = (walletAddress: string | undefined) => {
@@ -14,7 +16,7 @@ export const useUserData = (walletAddress: string | undefined) => {
     const fetchUserData = async () => {
       try {
         const response = await fetch(`/api/user/${walletAddress}`);
-        if (!response.ok) {
+        if (!response.ok) { 
           throw new Error('Failed to fetch user data');
         }
         const data = await response.json();

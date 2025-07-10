@@ -1,4 +1,4 @@
- # [Under Contruction] Only static pages are added
+ # [Under Contruction]
 
 # ChessPunk
 

@@ -1,6 +1,45 @@
-import { matchHistory } from '../../data/data';
+import { useState, useEffect } from 'react';
+import { useWallet } from '../../context/WalletContext';
+
+interface Match {
+  id: number;
+  opponent: string;
+  result: string;
+  duration: string; // e.g., '00:05:00'
+  played_at: string; // ISO string
+  elo_change: number;
+}
 
 const History = () => {
+  const { connectedWallet } = useWallet();
+  const [matches, setMatches] = useState<Match[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchMatchHistory = async () => {
+      if (!connectedWallet) return;
+
+      try {
+        const response = await fetch(`/api/user/match-history?walletAddress=${connectedWallet.address}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch match history');
+        }
+        const data = await response.json();
+        setMatches(data);
+      } catch (err) {
+        setError((err as Error).message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMatchHistory();
+  }, [connectedWallet]);
+
+  if (loading) return <div>Loading match history...</div>;
+  if (error) return <div>Error: {error}</div>;
+
   return (
     <div className="bg-gray-800/50 backdrop-blur-sm border border-cyan-500/20 rounded-xl overflow-hidden">
       <div className="p-6 border-b border-cyan-500/20">
@@ -19,7 +58,7 @@ const History = () => {
             </tr>
           </thead>
           <tbody className="divide-y divide-cyan-500/20">
-            {matchHistory.map((match) => (
+            {matches.map((match) => (
               <tr key={match.id} className="hover:bg-gray-700/30">
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center">
@@ -39,17 +78,13 @@ const History = () => {
                   )}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-gray-300">{match.duration}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-gray-300">{match.date}</td>
-                <td className={`px-6 py-4 whitespace-nowrap font-bold ${match.eloChange.startsWith('+') ? 'text-green-400' : 'text-red-400'}`}>
-                  {match.eloChange}
+                <td className="px-6 py-4 whitespace-nowrap text-gray-300">{new Date(match.played_at).toLocaleDateString()}</td>
+                <td className={`px-6 py-4 whitespace-nowrap font-bold ${match.elo_change > 0 ? 'text-green-400' : 'text-red-400'}`}>
+                  {match.elo_change > 0 ? '+' : ''}{match.elo_change}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <button className="text-cyan-400 hover:text-cyan-300 mr-3">
-                    Review
-                  </button>
-                  <button className="text-purple-400 hover:text-purple-300">
-                    Share
-                  </button>
+                  <button className="text-cyan-400 hover:text-cyan-300 mr-3">Review</button>
+                  <button className="text-purple-400 hover:text-purple-300">Share</button>
                 </td>
               </tr>
             ))}
@@ -58,21 +93,7 @@ const History = () => {
       </div>
       <div className="px-6 py-4 border-t border-cyan-500/20 flex justify-between items-center">
         <div className="text-sm text-gray-400">
-          Showing 7 of 187 matches
-        </div>
-        <div className="flex space-x-2">
-          <button className="px-3 py-1 rounded-lg bg-gray-700 hover:bg-cyan-500/20">
-            Previous
-          </button>
-          <button className="px-3 py-1 rounded-lg bg-cyan-500/20 text-cyan-400">
-            1
-          </button>
-          <button className="px-3 py-1 rounded-lg bg-gray-700 hover:bg-cyan-500/20">
-            2
-          </button>
-          <button className="px-3 py-1 rounded-lg bg-gray-700 hover:bg-cyan-500/20">
-            Next
-          </button>
+          Showing {matches.length} matches
         </div>
       </div>
     </div>

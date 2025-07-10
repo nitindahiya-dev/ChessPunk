@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { NextPage } from 'next';
 import BackgroundGrid from '../components/home/BackgroundGrid';
 import Hero from '../components/home/Hero';
@@ -8,11 +9,13 @@ import TournamentCountdown from '../components/home/TournamentCountdown';
 import PlayControls from '../components/PlayControls';
 
 const Home: NextPage = () => {
+  const [showPlayModal, setShowPlayModal] = useState(false);
+
   return (
     <div className="min-h-screen bg-gray-900 text-white">
       <BackgroundGrid />
-      <Hero onPlayNowClick={() => {}} /> {/* Update if Hero needs to trigger PlayControls */}
-      <PlayControls />
+      <Hero onPlayNowClick={() => setShowPlayModal(true)} />
+      <PlayControls showModal={showPlayModal} onClose={() => setShowPlayModal(false)} />
       <HomeChessBoard />
       <Features />
       <PlayerSpotlight />

@@ -1,3 +1,5 @@
+//pages/api/user/[walletAddress].ts
+
 import { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from '../../../prisma/prisma';
 
@@ -30,6 +32,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         },
       });
       console.log('New user created:', user);
+      console.log('DATABASE_URL:', process.env.DATABASE_URL);
     } else {
       console.log('Updating last_active for existing user');
       user = await prisma.users.update({

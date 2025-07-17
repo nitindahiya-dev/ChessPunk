@@ -30,11 +30,6 @@ interface GameResult {
   reason: GameReason;
 }
 
-// interface MatchStats {
-//   moves: number;
-//   duration: number;
-// }
-
 export default function GameRoom() {
   const router = useRouter();
   const { query } = router;
@@ -60,6 +55,26 @@ export default function GameRoom() {
 
   const isAIGame = roomId?.startsWith('ai-');
   const difficulty = isAIGame && roomId ? (roomId.split('-')[1] as 'easy' | 'medium' | 'hard') : null;
+
+  // Calculate ELO change
+  const calculateEloChange = (playerElo: number, opponentElo: number, outcome: 'win' | 'loss' | 'draw'): number => {
+    const K = 32;
+    const expectedScore = 1 / (1 + Math.pow(10, (opponentElo - playerElo) / 400));
+    let score: number;
+    if (outcome === 'win') score = 1;
+    else if (outcome === 'loss') score = 0;
+    else score = 0.5;
+    const change = K * (score - expectedScore);
+    return Math.round(change);
+  };
+
+  // Format duration to HH:MM:SS
+  const formatDuration = (seconds: number): string => {
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    const s = seconds % 60;
+    return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+  };
 
   useEffect(() => {
     if (!roomId) return;
@@ -141,7 +156,7 @@ export default function GameRoom() {
         sock.disconnect();
       };
     }
-  }, [roomId, game, mode, playerColor, gameResult, isAIGame, difficulty]);
+  }, [roomId, game, mode, playerColor, gameResult, isAIGame, difficulty, userData?.elo_rating]);
 
   useEffect(() => {
     if (startTime && !gameResult) {
@@ -160,6 +175,41 @@ export default function GameRoom() {
       return () => clearTimeout(timer);
     }
   }, [gameResult, router]);
+
+  useEffect(() => {
+    if (gameResult && connectedWallet && userData && (isAIGame || opponent)) {
+      const saveMatch = async () => {
+        try {
+          const playerElo = userData.elo_rating;
+          const opponentElo = isAIGame ? (difficulty === 'easy' ? 1000 : difficulty === 'medium' ? 1500 : 2000) : opponent!.elo;
+          const eloChange = calculateEloChange(playerElo, opponentElo, gameResult.outcome);
+          const result = gameResult.outcome.charAt(0).toUpperCase() + gameResult.outcome.slice(1);
+          const opponentName = isAIGame ? `AI (${difficulty})` : opponent!.name;
+          const matchDuration = formatDuration(duration);
+
+          const response = await fetch('/api/user/save-match', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              walletAddress: connectedWallet.address,
+              opponent: opponentName,
+              result,
+              duration: matchDuration,
+              eloChange,
+            }),
+          });
+
+          if (!response.ok) {
+            throw new Error('Failed to save match');
+          }
+          console.log('Match saved successfully');
+        } catch (error) {
+          console.error('Error saving match:', error);
+        }
+      };
+      saveMatch();
+    }
+  }, [gameResult, connectedWallet, userData, isAIGame, difficulty, opponent, duration]);
 
   const onDrop = (source: string, target: string): boolean => {
     const gameCopy = new Chess(game.fen());

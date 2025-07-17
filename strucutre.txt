@@ -5,8 +5,6 @@ ChessPunk/
 ├── .gitignore                   # Ignores node_modules, .env*, etc.
 
 
-├── .env
-├── .env.local                   # Local environment variables (never commit this)
 ├── .env.development             # Dev environment variables
 ├── .env.production              # Production environment variables
 
@@ -45,6 +43,7 @@ ChessPunk/
 ├── prisma/
 │   └── prisma.ts                
 │   └── schema.prisma                
+│   └── see.js                
 
 ├── types/
 │   └── global.d.ts 
@@ -101,6 +100,7 @@ ChessPunk/
     │   │   └── [walletAddress].ts
     │   │   └── update.ts
     │   │   └── match-history.ts
+    │   │   └── save-matches.ts
 │
 │   ├── docs/
 │   │   └── [slug].tsx           # Dynamic docs page per .mdx

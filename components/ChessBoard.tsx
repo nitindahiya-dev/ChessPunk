@@ -1,3 +1,5 @@
+//components/ChessBoard.tsx
+
 import React, { useRef, useState, useEffect } from 'react';
 import { Chessboard } from 'react-chessboard';
 import { motion } from 'framer-motion';

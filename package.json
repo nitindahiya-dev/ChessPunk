@@ -2,11 +2,21 @@
   "name": "chesspunk",
   "version": "0.1.0",
   "private": true,
-  "scripts": {
+    "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+
+    "prisma:generate:dev": "dotenv -e .env.development -- prisma generate",
+    "prisma:push:dev": "dotenv -e .env.development -- prisma db push",
+    "prisma:migrate:dev": "dotenv -e .env.development -- prisma migrate dev",
+    "prisma:migrate:deploy:dev": "dotenv -e .env.development -- prisma migrate deploy",
+    "seed:dev": "dotenv -e .env.development -- node prisma/seed.js",
+
+    "prisma:generate:prod": "dotenv -e .env.production -- prisma generate",
+    "prisma:push:prod": "dotenv -e .env.production -- prisma db push",
+    "prisma:migrate:deploy": "dotenv -e .env.production -- prisma migrate deploy"
   },
   "prisma": {
     "seed": "node prisma/seed.js"
@@ -15,14 +25,13 @@
     "@mdx-js/loader": "^3.1.0",
     "@mdx-js/react": "^3.1.0",
     "@next/mdx": "^15.3.4",
-    "@prisma/client": "^6.10.1",
+    "@prisma/client": "^6.11.1",
     "chess.js": "^1.4.0",
     "framer-motion": "^12.23.0",
     "gsap": "^3.13.0",
     "next": "15.3.4",
     "pg": "^8.16.3",
     "phosphor-react": "^1.4.1",
-    "prisma": "^6.10.1",
     "react": "^19.0.0",
     "react-chessboard": "^4.7.3",
     "react-dom": "^19.0.0",
@@ -45,9 +54,11 @@
     "@types/uuid": "^10.0.0",
     "@types/webpack": "^5.28.5",
     "autoprefixer": "^10.4.21",
+    "dotenv-cli": "^8.0.0",
     "eslint": "^9",
     "eslint-config-next": "15.3.4",
     "postcss": "^8.5.6",
+    "prisma": "^6.11.1",
     "tailwindcss": "^3.4.17",
     "typescript": "^5",
     "webpack": "^5.99.9"

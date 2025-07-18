@@ -1,7 +1,81 @@
-import { userData } from '../../data/data';
+import { useState, useEffect } from 'react';
+import { useWallet } from '../../context/WalletContext';
+
+interface Match {
+  id: number;
+  opponent: string;
+  result: string;
+  duration: string;
+  played_at: string;
+  elo_change: number;
+}
+
+interface AnalysisData {
+  accuracy: number;
+  blunders: number;
+  bestMove: string;
+}
+
+interface User {
+  id: number;
+  username: string;
+  wallet_address: string;
+  premium_member: boolean;
+}
 
 const Analysis = () => {
-  const isPremium = userData.premiumMember;
+  const { connectedWallet } = useWallet();
+  const [user, setUser] = useState<User | null>(null);
+  const [matches, setMatches] = useState<Match[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Define analysisData for the first match (mock data, as schema lacks these fields)
+  const analysisData: AnalysisData | null = matches.length > 0 ? {
+    accuracy: 87,
+    blunders: 2,
+    bestMove: 'Qe7',
+  } : null;
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!connectedWallet) return;
+
+      try {
+        // Fetch user data
+        const userResponse = await fetch(`/api/user/${connectedWallet.address}`);
+        if (!userResponse.ok) throw new Error('Failed to fetch user data');
+        const userData = await userResponse.json();
+        setUser(userData);
+
+        // Fetch match history
+        const matchesResponse = await fetch(`/api/user/match-history?walletAddress=${connectedWallet.address}`);
+        if (!matchesResponse.ok) throw new Error('Failed to fetch match history');
+        const matchesData = await matchesResponse.json();
+        // Sort matches by date descending and take the two most recent
+        const recentMatches = matchesData
+          .sort((a: Match, b: Match) => new Date(b.played_at).getTime() - new Date(a.played_at).getTime())
+          .slice(0, 2);
+        setMatches(recentMatches);
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError('An unknown error occurred');
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [connectedWallet]);
+
+  if (loading) return <div>Loading analysis data...</div>;
+  if (error) return <div>Error: {error}</div>;
+  if (!user) return <div>User not found</div>;
+
+  const isPremium = user.premium_member;
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -14,44 +88,57 @@ const Analysis = () => {
               Analyze New Game
             </button>
           </div>
-          <div className="bg-gray-700/50 p-4 rounded-lg mb-4">
-            <div className="flex justify-between items-center mb-3">
-              <div>
-                <div className="font-bold">vs NeonKing</div>
-                <div className="text-sm text-gray-400">2025-06-25 | Win in 32 moves</div>
+          {matches.length > 0 && (
+            <div className="bg-gray-700/50 p-4 rounded-lg mb-4">
+              <div className="flex justify-between items-center mb-3">
+                <div>
+                  <div className="font-bold">vs {matches[0].opponent}</div>
+                  <div className="text-sm text-gray-400">
+                    {new Date(matches[0].played_at).toLocaleDateString()} | {matches[0].result} in {matches[0].duration}
+                  </div>
+                </div>
+                <span className="px-2 py-1 bg-green-500/20 text-green-400 rounded-full text-xs font-bold">COMPLETE</span>
               </div>
-              <span className="px-2 py-1 bg-green-500/20 text-green-400 rounded-full text-xs font-bold">COMPLETE</span>
+              {analysisData && (
+                <div className="grid grid-cols-3 gap-4 mt-4">
+                  <div className="bg-gray-800 p-3 rounded-lg">
+                    <div className="text-cyan-400 font-bold">Accuracy</div>
+                    <div className="text-2xl font-bold mt-1">{analysisData.accuracy}%</div>
+                  </div>
+                  <div className="bg-gray-800 p-3 rounded-lg">
+                    <div className="text-cyan-400 font-bold">Blunders</div>
+                    <div className="text-2xl font-bold mt-1">{analysisData.blunders}</div>
+                  </div>
+                  <div className="bg-gray-800 p-3 rounded-lg">
+                    <div className="text-cyan-400 font-bold">Best Move</div>
+                    <div className="text-2xl font-bold mt-1">{analysisData.bestMove}</div>
+                  </div>
+                </div>
+              )}
+              <button className="mt-4 w-full py-2 bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 rounded-lg">
+                View Full Analysis
+              </button>
             </div>
-            <div className="grid grid-cols-3 gap-4 mt-4">
-              <div className="bg-gray-800 p-3 rounded-lg">
-                <div className="text-cyan-400 font-bold">Accuracy</div>
-                <div className="text-2xl font-bold mt-1">87%</div>
+          )}
+          {matches.length > 1 && (
+            <div className="bg-gray-700/50 p-4 rounded-lg">
+              <div className="flex justify-between items-center mb-3">
+                <div>
+                  <div className="font-bold">vs {matches[1].opponent}</div>
+                  <div className="text-sm text-gray-400">
+                    {new Date(matches[1].played_at).toLocaleDateString()} | {matches[1].result} in {matches[1].duration}
+                  </div>
+                </div>
+                <span className="px-2 py-1 bg-yellow-500/20 text-yellow-400 rounded-full text-xs font-bold">PENDING</span>
               </div>
-              <div className="bg-gray-800 p-3 rounded-lg">
-                <div className="text-cyan-400 font-bold">Blunders</div>
-                <div className="text-2xl font-bold mt-1">2</div>
-              </div>
-              <div className="bg-gray-800 p-3 rounded-lg">
-                <div className="text-cyan-400 font-bold">Best Move</div>
-                <div className="text-2xl font-bold mt-1">Qe7</div>
+              <div className="text-gray-400 text-sm">
+                Analysis in progress... (Premium feature)
               </div>
             </div>
-            <button className="mt-4 w-full py-2 bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 rounded-lg">
-              View Full Analysis
-            </button>
-          </div>
-          <div className="bg-gray-700/50 p-4 rounded-lg">
-            <div className="flex justify-between items-center mb-3">
-              <div>
-                <div className="font-bold">vs EtherQueen</div>
-                <div className="text-sm text-gray-400">2025-06-20 | Draw in 40 moves</div>
-              </div>
-              <span className="px-2 py-1 bg-yellow-500/20 text-yellow-400 rounded-full text-xs font-bold">PENDING</span>
-            </div>
-            <div className="text-gray-400 text-sm">
-              Analysis in progress... (Premium feature)
-            </div>
-          </div>
+          )}
+          {matches.length === 0 && (
+            <div className="text-gray-400">No recent matches found.</div>
+          )}
         </div>
         {!isPremium && (
           <div className="bg-gradient-to-r from-cyan-500/20 to-purple-600/20 p-6 rounded-lg">

@@ -3,60 +3,46 @@ ChessPunk/
 ├── .github/
 │   └── deploy.yml               # GitHub Actions deployment workflow
 ├── .gitignore                   # Ignores node_modules, .env*, etc.
-
-
 ├── .env.development             # Dev environment variables
 ├── .env.production              # Production environment variables
-
 ├── next.config.js               # Next.js config
 ├── package.json                 # Project metadata, dependencies, and scripts
 ├── postcss.config.js            # Tailwind + PostCSS setup
 ├── tailwind.config.js           # Tailwind CSS configuration
 ├── tsconfig.json                # TypeScript configuration
-
 ├── README.md                    # Project overview and instructions
-
 ├── public/                      # Static assets
 │   ├── favicon.ico
 │   ├── backgrounds/
 │   ├── pieces/
 │   ├── sounds/
 │   └── grid-pattern.svg
-
 ├── styles/
 │   └── globals.css              # Tailwind base/components/utilities
-
 ├── content/                     # Static documentation content
 │   └── docs/                    # .mdx files for Docs UI
-
 ├── hooks/
 │   └── useSounds.ts             # Custom React hook for sound playback
-│   └── useUserData.ts           
-
+│   └── useUser Data.ts           
 ├── context/
 │   └── WalletContext.tsx        # Wallet state/context provider
-
 ├── lib/
 │   └── solana.ts                # Solana-specific helper functions
 │   └── chessAI.ts               # Adjusting difficulty via search depth
-
 ├── prisma/
-│   └── prisma.ts                
-│   └── schema.prisma                
-│   └── see.js                
-
+│   ├── prisma.ts                
+│   ├── schema.prisma            # now includes `model Tournament`
+│   └── see.js                  
 ├── types/
 │   └── global.d.ts 
-
 ├── components/                  # All reusable UI components
-│
+│   ├── CreateTournamentModal.tsx # Modal for creating tournaments
 │   ├── ui/
 │   │   └── Callout.tsx          # Alert/callout box UI
-│   │   ├── Navbar.tsx               # Top navigation bar
-│   │   ├── Footer.tsx               # Footer
-│   │   ├── Button.tsx               # Reusable button component
-│   │   ├── Modal.tsx                # Reusable modal component
-│
+│   │   ├── Navbar.tsx           # Top navigation bar
+│   │   ├── Footer.tsx           # Footer
+│   │   ├── Button.tsx           # Reusable button component
+│   │   ├── Modal.tsx            # Reusable modal component
 │   ├── dashboard/               # Dashboard views
 │   │   ├── Analysis.tsx
 │   │   ├── History.tsx
@@ -64,12 +50,10 @@ ChessPunk/
 │   │   ├── Profile.tsx
 │   │   ├── Settings.tsx
 │   │   └── Stats.tsx
-│
 │   ├── docs/                    # Docs layout/navigation
 │   │   ├── DocsLayout.tsx
 │   │   ├── DocsRightNav.tsx
 │   │   └── DocsSidebar.tsx
-│
 │   ├── home/                    # Homepage components
 │   │   ├── BackgroundGrid.tsx
 │   │   ├── HomeChessBoard.tsx
@@ -77,7 +61,6 @@ ChessPunk/
 │   │   ├── Hero.tsx
 │   │   ├── PlayerSpotlight.tsx
 │   │   └── TournamentCountdown.tsx
-│
 │   ├── PlayControls.tsx         # Game mode selector (Play Now)
 │   ├── WalletConnector.tsx      # Web3 wallet connect logic
 │   ├── ChatPanel.tsx            # In-game chat UI
@@ -85,7 +68,6 @@ ChessPunk/
 │   ├── ChessBoard.tsx           # Main board logic
 │   ├── PlayerPanel.tsx          # Player avatars/info
 │   └── TrophyCase.tsx           # Rewards/Achievements showcase
-
 ├── pages/                       # Next.js routes (1 file = 1 route)
 │   ├── _app.tsx                 # Custom App component (includes global providers & styles)
 │   ├── index.tsx                # Homepage
@@ -94,20 +76,22 @@ ChessPunk/
 │   ├── leaderboard.tsx          # Leaderboard page
 │   ├── nfts.tsx                 # NFT showcase page
 │   ├── tournaments.tsx          # Tournament info/registration
-│
+│   ├── tournaments/              # Tournament-related pages
+│   │   └── edit/                # Edit tournament pages
+│   │       └── [id].tsx         # Edit form modal
 │   ├── api/                     # API routes (serverless functions)
-│       ├── users/
-    │   │   └── [walletAddress].ts
-    │   │   └── update.ts
-    │   │   └── match-history.ts
-    │   │   └── save-matches.ts
-│
+│   │   ├── tournaments/          # Tournament-related API routes
+│   │   │   ├── index.ts         # GET all, POST create
+│   │   │   └── [id].ts          # GET one, PUT update, DELETE
+│   │   ├── users/
+│   │   │   └── [walletAddress].ts
+│   │   │   └── update.ts
+│   │   │   └── match-history.ts
+│   │   │   └── save-matches.ts
 │   ├── docs/
 │   │   └── [slug].tsx           # Dynamic docs page per .mdx
-│
 │   └── game/
 │       └── [roomId].tsx         # Dynamic multiplayer game room
-
 
 smooth animation + Tailwind CSS + react-chessboard
 Mobile-friendly out of the box.
